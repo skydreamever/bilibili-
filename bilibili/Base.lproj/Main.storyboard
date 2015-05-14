@@ -343,9 +343,9 @@
         <scene sceneID="nEi-0i-7ax">
             <objects>
                 <windowController id="K5e-GW-JyM" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="6Ju-tA-qOP">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="utilityWindow" id="6Ju-tA-qOP">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <windowCollectionBehavior key="collectionBehavior" fullScreenPrimary="YES"/>
                         <rect key="contentRect" x="163" y="199" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
                     </window>
@@ -357,18 +357,47 @@
             </objects>
             <point key="canvasLocation" x="840" y="397"/>
         </scene>
-        <!--View Controller-->
+        <!--Media View Controller-->
         <scene sceneID="JBm-sq-Coh">
             <objects>
-                <viewController id="SIj-ez-vuw" sceneMemberID="viewController">
+                <viewController id="SIj-ez-vuw" customClass="MediaViewController" sceneMemberID="viewController">
                     <view key="view" id="ZbV-mM-5zq">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HQj-Nl-vlR">
+                                <rect key="frame" x="0.0" y="0.0" width="315" height="270"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="left" drawsBackground="YES" id="OMw-KP-0Cd">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="OJl-E9-J3g">
+                                <rect key="frame" x="150" y="45" width="180" height="180"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="IQh-bq-TDd"/>
+                                    <constraint firstAttribute="width" constant="180" id="ZAH-bb-OAF"/>
+                                    <constraint firstAttribute="height" constant="180" id="kuX-BV-AFh"/>
+                                </constraints>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="r9s-n9-4h5"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="HQj-Nl-vlR" firstAttribute="leading" secondItem="ZbV-mM-5zq" secondAttribute="leading" id="9fQ-na-KXS"/>
+                            <constraint firstItem="OJl-E9-J3g" firstAttribute="centerX" secondItem="ZbV-mM-5zq" secondAttribute="centerX" id="Ff0-hc-ahq"/>
+                            <constraint firstAttribute="bottom" secondItem="HQj-Nl-vlR" secondAttribute="bottom" id="Zkv-sB-3QK"/>
+                            <constraint firstItem="OJl-E9-J3g" firstAttribute="centerY" secondItem="ZbV-mM-5zq" secondAttribute="centerY" id="vHP-ov-vkM"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="loadingImage" destination="OJl-E9-J3g" id="Kql-EF-LD9"/>
+                        <outlet property="statusShow" destination="HQj-Nl-vlR" id="uU5-zz-7uO"/>
+                    </connections>
                 </viewController>
                 <customObject id="MuU-3y-Ya9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="840" y="855"/>
+            <point key="canvasLocation" x="848" y="855"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="hIz-AP-VOD">
@@ -430,6 +459,7 @@
                     </view>
                     <connections>
                         <outlet property="webView" destination="T6r-Qi-1Eh" id="Hgs-qY-krp"/>
+                        <segue destination="K5e-GW-JyM" kind="show" identifier="gotoMediaPlayer" id="xTu-VC-gZz"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

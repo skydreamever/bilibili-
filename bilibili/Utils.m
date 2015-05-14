@@ -5,7 +5,7 @@
 //  Created by 孙龙霄 on 5/13/15.
 //  Copyright (c) 2015 dream. All rights reserved.
 //
-
+#import <CommonCrypto/CommonDigest.h>
 #import "Utils.h"
 
 @implementation Utils
@@ -48,5 +48,39 @@
     [newError writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
     
 }
+
+
++ (CALayer *)layerFromRGB:(CGFloat)red :(CGFloat)green :(CGFloat)blue :(CGFloat)alpha{
+
+    CALayer *viewLayer = [CALayer layer];
+    [viewLayer setBackgroundColor:CGColorCreateGenericRGB(red, green, blue, alpha)]; //RGB plus
+
+    
+    return viewLayer;
+}
+
++ (NSString *)getDevInfo:(NSString *)key{
+    
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"developer" ofType:@"plist"];
+    NSDictionary *data = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
+    return data[key];
+    
+}
+
++ (NSString *) md5:(NSString *) input
+{
+    const char *cStr = [input UTF8String];
+    unsigned char digest[16];
+    CC_MD5( cStr, (CC_LONG)strlen(cStr), digest ); // This is the md5 call
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return  output;
+    
+}
+
 
 @end

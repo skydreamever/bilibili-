@@ -9,6 +9,10 @@
 #import "MainViewController.h"
 #import "Utils.h"
 
+NSString *vUrl;
+NSString *vCID;
+BOOL playStatus = false;
+
 @implementation MainViewController
 
 - (void)viewDidLoad {
@@ -98,7 +102,20 @@
 }
 
 - (void)playVideoByCID:(NSString *)cid{
-    DLog(@"开始准备进行视频播放")
+    DLog(@"开始准备进行视频播放，我们已经获得了cid：%@",cid);
+    
+    if (playStatus) {
+        return;
+    }
+    
+    playStatus = true;
+    
+    vCID = cid;
+    vUrl = _webView.mainFrameURL;
+    [self performSegueWithIdentifier:@"gotoMediaPlayer" sender:self];
+    
+    
+    
 }
 
 - (void)downloadVideoByCID:(NSString *)cide{
@@ -110,6 +127,35 @@
     return _webView;
 }
 
+- (NSURLRequest *)webView:(WebView *)sender
+                 resource:(id)identifier
+          willSendRequest:(NSURLRequest *)request
+         redirectResponse:(NSURLResponse *)redirectResponse
+           fromDataSource:(WebDataSource *)dataSource{
+    //这个我就直接拿过来，然后直接用啦
+    NSString *URL = [request.URL absoluteString];
+    NSMutableURLRequest *re = [[NSMutableURLRequest alloc] init];
+    re = (NSMutableURLRequest *) request.mutableCopy;
+    if([URL containsString:@"google"]){
+        // Google ad is blocked in some (china) area, maybe take 30 seconds to wait for timeout
+        [re setURL:[NSURL URLWithString:@"http://static.hdslb.com/images/transparent.gif"]];
+    }else if([URL containsString:@"qq.com"]){
+        // QQ analytics may block more than 10 seconds in some area
+        [re setURL:[NSURL URLWithString:@"http://static.hdslb.com/images/transparent.gif"]];
+    }else if([URL containsString:@"cnzz.com"]){
+        // CNZZ is very slow in other country
+        [re setURL:[NSURL URLWithString:@"http://static.hdslb.com/images/transparent.gif"]];
+    }else{
+        //这是所谓的IP伪造
+        NSUserDefaults *settingsController = [NSUserDefaults standardUserDefaults];
+        NSString *xff = [settingsController objectForKey:@"xff"];
+        if([xff length] > 4){
+            [re setValue:xff forHTTPHeaderField:@"X-Forwarded-For"];
+            [re setValue:xff forHTTPHeaderField:@"Client-IP"];
+        }
+    }
+    return re;
+}
 
 - (void)setRepresentedObject:(id)representedObject {
     [super setRepresentedObject:representedObject];

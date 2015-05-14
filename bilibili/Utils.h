@@ -12,5 +12,11 @@
 
 + (void)showError:(NSError *)error;
 
++ (CALayer *)layerFromRGB:(CGFloat)red :(CGFloat)green :(CGFloat)blue :(CGFloat)alpha;
++ (NSString *)getDevInfo:(NSString *)key;
+
++ (NSString *) md5:(NSString *) input;
+
+//CG_EXTERN CGColorRef CGColorCreateGenericRGB(CGFloat red, CGFloat green,
 
 @end
