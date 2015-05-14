@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  Utils.h
 //  bilibili
 //
 //  Created by 孙龙霄 on 5/13/15.
@@ -8,8 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface ViewController : NSViewController
+@interface Utils : NSObject
+
++ (void)showError:(NSError *)error;
 
 
 @end
-
