@@ -66,11 +66,11 @@ static void wakeup(void *context) {
     
     
 
-    
-    [[[NSApplication sharedApplication] keyWindow] orderBack:nil];
-    [[[NSApplication sharedApplication] keyWindow] resignKeyWindow];
-    [self.view.window makeKeyWindow];
-    [self.view.window makeMainWindow];
+//    
+//    [[[NSApplication sharedApplication] keyWindow] orderBack:nil];
+//    [[[NSApplication sharedApplication] keyWindow] resignKeyWindow];
+//    [self.view.window makeKeyWindow];
+//    [self.view.window makeMainWindow];
     
     NSRect rect = [[NSScreen mainScreen] visibleFrame];
     NSNumber *viewHeight = [NSNumber numberWithFloat:rect.size.height];
@@ -222,9 +222,16 @@ static void wakeup(void *context) {
     queue = dispatch_queue_create("mpv", DISPATCH_QUEUE_SERIAL);
 
     
+    
+    
     if([vUrl containsString:@"live_"]){
-        [self PlayVideo:@"" :res];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self showLiveComment];
+            [self PlayVideo:@"" :res];
+
+        });
         return;
+
     }
     
 
@@ -428,10 +435,12 @@ static void wakeup(void *context) {
 
 }
 
--（void)getLiveComment{
-   //因为直播的弹幕是不断更新的，我1s获取一次吧，先试试性能
+-(void) showLiveComment{
+    //既然弹幕没有办法在直播视频上显示，那我就新建一个能够显示弹幕的窗口了
+    //还是跟以前想法一样，我3s中加载一次，主要是我网速不好，怕出问题
     
-    
+    [self performSegueWithIdentifier:@"showLiveComment" sender:self];
+
     
     
 }

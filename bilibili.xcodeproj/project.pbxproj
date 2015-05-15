@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D2BB6E121B05844C0033DDA8 /* ISSoundAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BB6E101B05844C0033DDA8 /* ISSoundAdditions.m */; };
 		D2BB6E141B0591760033DDA8 /* inject.js in Resources */ = {isa = PBXBuildFile; fileRef = D2BB6E131B0591760033DDA8 /* inject.js */; };
+		D2BB6E1C1B05E2240033DDA8 /* LiveCmtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2BB6E1B1B05E2240033DDA8 /* LiveCmtViewController.m */; };
 		D2DC01671B034A5600930D0E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2DC01661B034A5600930D0E /* Images.xcassets */; };
 		D2DC016A1B034A5600930D0E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2DC01681B034A5600930D0E /* Main.storyboard */; };
 		D2DC01761B034A5600930D0E /* bilibiliTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DC01751B034A5600930D0E /* bilibiliTests.m */; };
@@ -130,6 +131,8 @@
 		D2BB6E0F1B05844C0033DDA8 /* ISSoundAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISSoundAdditions.h; sourceTree = "<group>"; };
 		D2BB6E101B05844C0033DDA8 /* ISSoundAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISSoundAdditions.m; sourceTree = "<group>"; };
 		D2BB6E131B0591760033DDA8 /* inject.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = inject.js; sourceTree = "<group>"; };
+		D2BB6E1A1B05E2240033DDA8 /* LiveCmtViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveCmtViewController.h; sourceTree = "<group>"; };
+		D2BB6E1B1B05E2240033DDA8 /* LiveCmtViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveCmtViewController.m; sourceTree = "<group>"; };
 		D2DC01591B034A5500930D0E /* bilibili.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bilibili.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2DC015D1B034A5500930D0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2DC015E1B034A5500930D0E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -258,6 +261,8 @@
 				D2DC01641B034A5600930D0E /* MainViewController.m */,
 				D2E235851B0459C500E42BA5 /* MediaViewController.h */,
 				D2E235861B0459C500E42BA5 /* MediaViewController.mm */,
+				D2BB6E1A1B05E2240033DDA8 /* LiveCmtViewController.h */,
+				D2BB6E1B1B05E2240033DDA8 /* LiveCmtViewController.m */,
 				D2BB6E0F1B05844C0033DDA8 /* ISSoundAdditions.h */,
 				D2BB6E101B05844C0033DDA8 /* ISSoundAdditions.m */,
 				D2DC01661B034A5600930D0E /* Images.xcassets */,
@@ -464,6 +469,7 @@
 				D2E235D51B04CA9E00E42BA5 /* MediaViewController.mm in Sources */,
 				D2E235D61B04CA9E00E42BA5 /* main.m in Sources */,
 				D2E235D71B04CA9E00E42BA5 /* AboutView.m in Sources */,
+				D2BB6E1C1B05E2240033DDA8 /* LiveCmtViewController.m in Sources */,
 				D2E235D81B04CA9E00E42BA5 /* Utils.m in Sources */,
 				D2BB6E121B05844C0033DDA8 /* ISSoundAdditions.m in Sources */,
 			);
