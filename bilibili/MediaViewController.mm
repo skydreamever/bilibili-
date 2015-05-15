@@ -11,6 +11,7 @@
 #import "Utils.h"
 #import "danmaku2ass.h"
 #import "client.h"
+#import "ISSoundAdditions.h"
 
 extern NSString *vUrl;
 extern NSString *vCID;
@@ -96,24 +97,51 @@ static void wakeup(void *context) {
 
 
 - (void)parseURL{
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"http:/*[^/]+/video/av(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)" options:NSRegularExpressionCaseInsensitive error:nil];
     
-    NSTextCheckingResult *match = [regex firstMatchInString:vUrl options:0 range:NSMakeRange(0, [vUrl length])];
-    
-    NSRange aidRange = [match rangeAtIndex:1];
-    
-    if(aidRange.length > 0){
-        vAID = [vUrl substringWithRange:aidRange];
-        NSRange pidRange = [match rangeAtIndex:3];
-        if(pidRange.length > 0 ){
-            vPID = [vUrl substringWithRange:pidRange];
-        }
+    NSString *baseAPIUrl;
+
+    if([vCID isEqualToString:@"LOCALVIDEO"]){
+//        if([vUrl length] > 5){
+//            NSDictionary *VideoInfoJson = [self getVideoInfo:vUrl];
+//            NSNumber *width = [VideoInfoJson objectForKey:@"width"];
+//            NSNumber *height = [VideoInfoJson objectForKey:@"height"];
+//            NSString *commentFile = @"/NotFound";
+//            if([cmFile length] > 5){
+//                commentFile = [self getComments:width :height];
+//            }
+//            [self PlayVideo:commentFile :res];
+//            return;
+//        }else{
+//            [self.view.window performClose:self];
+//        }
+//        return;
+    }else if([vUrl containsString:@"live.bilibili"]){
+        baseAPIUrl = @"http://live.bilibili.com/api/playurl?appkey=%@&otype=json&cid=%@&quality=%d&sign=%@";
+        vAID = @"LIVE";
+        vPID = @"LIVE";
     }else{
-        vAID = @"0";
-    }
     
-    if(![vPID length]){
-        vPID = @"1";
+        baseAPIUrl = @"http://interface.bilibili.com/playurl?appkey=%@&otype=json&cid=%@&quality=%d&sign=%@";
+
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"http:/*[^/]+/video/av(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)" options:NSRegularExpressionCaseInsensitive error:nil];
+        
+        NSTextCheckingResult *match = [regex firstMatchInString:vUrl options:0 range:NSMakeRange(0, [vUrl length])];
+        
+        NSRange aidRange = [match rangeAtIndex:1];
+        
+        if(aidRange.length > 0){
+            vAID = [vUrl substringWithRange:aidRange];
+            NSRange pidRange = [match rangeAtIndex:3];
+            if(pidRange.length > 0 ){
+                vPID = [vUrl substringWithRange:pidRange];
+            }
+        }else{
+            vAID = @"0";
+        }
+        
+        if(![vPID length]){
+            vPID = @"1";
+        }
     }
     
     // Get Sign
@@ -127,7 +155,7 @@ static void wakeup(void *context) {
     
     // Get Playback URL
     
-    NSURL* URL = [NSURL URLWithString:[NSString stringWithFormat:@"http://interface.bilibili.com/playurl?appkey=%@&otype=json&cid=%@&quality=%d&sign=%@",[Utils getDevInfo:@"appkey"],vCID,quality,sign]];
+    NSURL* URL = [NSURL URLWithString:[NSString stringWithFormat:baseAPIUrl,[Utils getDevInfo:@"appkey"],vCID,quality,sign]];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
     request.HTTPMethod = @"GET";
     request.timeoutInterval = 5;
@@ -191,8 +219,15 @@ static void wakeup(void *context) {
 //
 //    // ffprobe
 
-    
     queue = dispatch_queue_create("mpv", DISPATCH_QUEUE_SERIAL);
+
+    
+    if([vUrl containsString:@"live_"]){
+        [self PlayVideo:@"" :res];
+        return;
+    }
+    
+
     
     dispatch_async(queue, ^{
         int usingBackup = 0;
@@ -200,6 +235,9 @@ static void wakeup(void *context) {
         GetInfo:NSDictionary *VideoInfoJson = [self getVideoInfo:firstVideo];
         
 
+        if (isCancelled) {
+            return;
+        }
         
         if([VideoInfoJson count] == 0){
             if(!BackupUrls){
@@ -222,16 +260,22 @@ static void wakeup(void *context) {
         
         if(!jsonError){
             // Get Comment
-
             
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSNumber *width = [VideoInfoJson objectForKey:@"width"];
                 NSNumber *height = [VideoInfoJson objectForKey:@"height"];
                 DLog(@"开始获取并解析弹幕");
                 [_statusShow setStringValue:[NSString stringWithFormat:@"%@连接没有异常",_statusShow.stringValue]];
 
+                if (isCancelled) {
+                    return;
+                }
+                
+
                 NSString *commentFile = [self getComments:width :height];
                 [self PlayVideo:commentFile :res];
+
 
 
             });
@@ -323,6 +367,8 @@ static void wakeup(void *context) {
 
 - (NSString *) getComments:(NSNumber *)width :(NSNumber *)height {
     
+    
+    
     DLog(@"start");
     
     NSString *resolution = [NSString stringWithFormat:@"%@x%@",width,height];
@@ -411,9 +457,11 @@ static void wakeup(void *context) {
     check_error(mpv_set_option_string(mpv, "framedrop", "vo"));
     check_error(mpv_set_option_string(mpv, "vf", "lavfi=\"fps=fps=60:round=down\""));
     
-    check_error(mpv_set_option_string(mpv, "sub-ass", "yes"));
-    check_error(mpv_set_option_string(mpv, "sub-file", [commentFile cStringUsingEncoding:NSUTF8StringEncoding]));
-    
+    if(![vUrl containsString:@"live_"]){
+        check_error(mpv_set_option_string(mpv, "sub-ass", "yes"));
+        check_error(mpv_set_option_string(mpv, "sub-file", [commentFile cStringUsingEncoding:NSUTF8StringEncoding]));
+    }
+
     // request important errors
     check_error(mpv_request_log_messages(mpv, "warn"));
     
@@ -453,35 +501,6 @@ static void wakeup(void *context) {
     [_loadingImage setImage: [NSImage imageNamed:[NSString stringWithFormat:@"ani_loading_%d", picture_num+1]] ];
 }
 
-- (void) mpv_stop
-{
-    if (mpv) {
-        const char *args[] = {"stop", NULL};
-        mpv_command(mpv, args);
-    }
-}
-
-- (void) mpv_quit
-{
-    if (mpv) {
-        const char *args[] = {"quit", NULL};
-        mpv_command(mpv, args);
-    }
-}
-
-
-- (BOOL)windowShouldClose:(id)sender{
-    
-    isCancelled = true;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        mpv_set_wakeup_callback(mpv, NULL,NULL);
-        
-        [self mpv_stop];
-        [self mpv_quit];
-    });
-    playStatus = false;
-    return YES;
-}
 
 
 - (void) handleEvent:(mpv_event *)event
@@ -557,4 +576,149 @@ static void wakeup(void *context) {
 
 @end
 
+
+@interface PlayerWindow : NSWindow <NSWindowDelegate>
+
+-(void)keyDown:(NSEvent*)event;
+
+@end
+
+@implementation PlayerWindow{
+    
+}
+
+BOOL paused = NO;
+BOOL hide = NO;
+BOOL obServer = NO;
+BOOL isFirstCall = YES;
+
+- (NSArray *)customWindowsToEnterFullScreenForWindow:(NSWindow *)window{
+    return nil;
+}
+
+- (void)window:(NSWindow *)window
+startCustomAnimationToEnterFullScreenWithDuration:(NSTimeInterval)duration{
+    
+}
+
+- (NSSize)windowWillResize:(NSWindow *)sender
+                    toSize:(NSSize)frameSize{
+    if(!obServer){
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidResize:) name:NSWindowDidResizeNotification object:self];
+        obServer = YES;
+    }else{
+        if(mpv){
+            if(strcmp(mpv_get_property_string(mpv,"pause"),"yes")){
+                mpv_set_property_string(mpv,"pause","yes");
+            }
+        }
+    }
+    return frameSize;
+}
+- (void)windowDidResize:(NSNotification *)notification{
+    [self performSelector:@selector(Continue) withObject:nil afterDelay:1.0];
+}
+
+- (void)Continue{
+    if(mpv && !isFirstCall){
+        if(strcmp(mpv_get_property_string(mpv,"pause"),"no")){
+            mpv_set_property_string(mpv,"pause","no");
+        }
+    }else{
+        isFirstCall = NO;
+    }
+}
+
+
+-(void)keyDown:(NSEvent*)event
+{
+    if(!mpv){
+        return;
+    }
+    switch( [event keyCode] ) {
+        case 125:{
+            [NSSound decreaseSystemVolumeBy:0.05];
+            break;
+        }
+        case 126:{
+            [NSSound increaseSystemVolumeBy:0.05];
+            break;
+        }
+        case 124:{
+            const char *args[] = {"seek", "5" ,NULL};
+            mpv_command(mpv, args);
+            break;
+        }
+        case 123:{
+            const char *args[] = {"seek", "-5" ,NULL};
+            mpv_command(mpv, args);
+            break;
+        }
+        case 49:{
+            if(strcmp(mpv_get_property_string(mpv,"pause"),"no")){
+                mpv_set_property_string(mpv,"pause","no");
+            }else{
+                mpv_set_property_string(mpv,"pause","yes");
+            }
+            break;
+        }
+        case 36:{
+//            [postCommentButton performClick:nil];
+            break;
+        }
+        case 53:{ // Esc key to hide mouse
+            if(hide == YES){
+                hide = NO;
+                [NSCursor unhide];
+            }else{
+                hide = YES;
+                [NSCursor hide];
+            }
+            break;
+        }
+        case 7:{ // X key to loop
+            mpv_set_option_string(mpv, "loop", "inf");
+            break;
+        }
+        default:
+            NSLog(@"Key pressed: %hu", [event keyCode]);
+            break;
+    }
+}
+
+- (void) mpv_stop
+{
+    if (mpv) {
+        const char *args[] = {"stop", NULL};
+        mpv_command(mpv, args);
+    }
+}
+
+- (void) mpv_quit
+{
+    if (mpv) {
+        const char *args[] = {"quit", NULL};
+        mpv_command(mpv, args);
+    }
+}
+
+- (BOOL)windowShouldClose:(id)sender{
+    
+    isCancelled = true;
+   
+    if (mpv) {
+//        mpv_set_wakeup_callback(mpv, NULL,NULL);
+        
+        [self mpv_stop];
+        [self mpv_quit];
+   
+    }
+    
+
+
+    playStatus = false;
+    return YES;
+}
+
+@end
 
