@@ -545,11 +545,14 @@
                             </button>
                             <textField verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nlk-ZF-vod">
                                 <rect key="frame" x="55" y="249" width="431" height="21"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="aIr-X8-Qav">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" placeholderString="在这里输入你想访问的bilibili地址或则AV号然后回车即可" drawsBackground="YES" id="aIr-X8-Qav">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
+                                <connections>
+                                    <action selector="openURL:" target="XfG-lQ-9wD" id="28o-jm-5yE"/>
+                                </connections>
                             </textField>
                             <button verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zh7-DR-IyZ">
                                 <rect key="frame" x="20" y="242" width="38" height="32"/>

@@ -31,6 +31,64 @@ BOOL playStatus = false;
 }
 
 
+- (IBAction)openURL:(NSTextField *)sender {
+    
+    NSString *str = [sender stringValue];
+    
+    if (![self isMatchURL:str]) {
+        if ([[str substringToIndex:6] isEqual: @"http//"]){
+            _webView.mainFrameURL = [NSString stringWithFormat:@"http://%@", str];
+        }else{
+            _webView.mainFrameURL = str;
+        }
+    }else if(![self isNum:str]){
+        //实际上因为av号也有4位长度的，但是这里以直播为4为主，如果有问题再进行更新
+        if ([str length] != 4){
+            _webView.mainFrameURL = [NSString stringWithFormat:@"http://www.bilibili.com/video/av%@",str];
+        }else{
+            _webView.mainFrameURL = [NSString stringWithFormat:@"http://live.bilibili.com/%@",str];
+        }
+    }else{
+
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert setMessageText:@"请输入正确的格式"];
+        [alert runModal];
+        
+    }
+    
+}
+
+- (BOOL)isNum:(NSString *)str{
+    NSScanner* scan = [NSScanner scannerWithString:str];
+    int val;
+
+    [scan scanInt:&val] && [scan isAtEnd];
+    return [scan scanInt:&val] && [scan isAtEnd];
+
+}
+
+
+- (BOOL)isMatchURL:(NSString *)url{
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"/*[^/]+/video/av(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)" options:NSRegularExpressionCaseInsensitive error:nil];
+    
+    NSTextCheckingResult *match = [regex firstMatchInString:url options:NSMatchingReportProgress range:NSMakeRange(0, [url length])];
+    
+    if(match == nil){
+        
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"/*[^/]+/(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)" options:NSRegularExpressionCaseInsensitive error:nil];
+        
+        NSTextCheckingResult *match = [regex firstMatchInString:url options:NSMatchingReportProgress range:NSMakeRange(0, [url length])];
+        return match == nil;
+        
+    }else{
+        return NO;
+    }
+    
+}
+
+
+
 
 - (void)setupWebView{
     [_webView setFrameLoadDelegate:self];

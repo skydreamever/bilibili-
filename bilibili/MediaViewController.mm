@@ -96,6 +96,10 @@ static void wakeup(void *context) {
 }
 
 
+
+
+
+
 - (void)parseURL{
     
     NSString *baseAPIUrl;
