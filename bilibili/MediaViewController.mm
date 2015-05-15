@@ -428,6 +428,14 @@ static void wakeup(void *context) {
 
 }
 
+-（void)getLiveComment{
+   //因为直播的弹幕是不断更新的，我1s获取一次吧，先试试性能
+    
+    
+    
+    
+}
+
 
 - (void)PlayVideo:(NSString*) commentFile :(NSString*)res{
 //     Start Playing Video
