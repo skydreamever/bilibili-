@@ -65,7 +65,7 @@ static void wakeup(void *context) {
     [self.view setLayer:[Utils layerFromRGB:1.0 :1.0 :1.0 :1.0]];
     
     
-
+    isCancelled = NO;
 //    
 //    [[[NSApplication sharedApplication] keyWindow] orderBack:nil];
 //    [[[NSApplication sharedApplication] keyWindow] resignKeyWindow];
@@ -229,8 +229,9 @@ static void wakeup(void *context) {
     
     
     if([vUrl containsString:@"live_"]){
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(queue, ^{
             [self showLiveComment];
+            [_statusShow setStringValue:[NSString stringWithFormat:@"%@连接没有异常",_statusShow.stringValue]];
             [self PlayVideo:@"" :res];
 
         });
@@ -273,7 +274,7 @@ static void wakeup(void *context) {
             // Get Comment
             
 
-            dispatch_async(dispatch_get_main_queue(), ^{
+
                 NSNumber *width = [VideoInfoJson objectForKey:@"width"];
                 NSNumber *height = [VideoInfoJson objectForKey:@"height"];
                 DLog(@"开始获取并解析弹幕");
@@ -289,7 +290,7 @@ static void wakeup(void *context) {
 
 
 
-            });
+
             
             //        [self PlayVideo:commentFile :res];
         }else{
@@ -725,7 +726,7 @@ startCustomAnimationToEnterFullScreenWithDuration:(NSTimeInterval)duration{
 
 - (BOOL)windowShouldClose:(id)sender{
     
-    isCancelled = true;
+    isCancelled = YES;
    
     if (mpv) {
 //        mpv_set_wakeup_callback(mpv, NULL,NULL);
