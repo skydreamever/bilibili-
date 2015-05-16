@@ -27,6 +27,10 @@ extern NSString *vCID;
     [self.view setWantsLayer:YES];
     [self.view setLayer:[Utils layerFromRGB:1.0 :1.0 :1.0 :1.0]];
     
+    
+
+
+    
     content = [[NSMutableArray alloc] init];
     
 //    
@@ -45,6 +49,13 @@ extern NSString *vCID;
     });
     
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(LiveCmtClose) name:@"LiveCmtClose" object:nil];
+
+}
+
+- (void)LiveCmtClose{
+    [self.view.window close];
 }
 
 - (void)loadComment{

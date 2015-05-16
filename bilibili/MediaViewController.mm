@@ -735,7 +735,8 @@ startCustomAnimationToEnterFullScreenWithDuration:(NSTimeInterval)duration{
    
     }
     
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LiveCmtClose" object:nil];
+    
 
     playStatus = false;
     return YES;
