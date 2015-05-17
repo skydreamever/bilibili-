@@ -18,7 +18,9 @@ extern NSString *vCID;
 }
 @end
 
-@implementation LiveCmtViewController
+@implementation LiveCmtViewController{
+    NSTimer *timer;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -41,7 +43,7 @@ extern NSString *vCID;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        [NSTimer scheduledTimerWithTimeInterval:3
+        timer = [NSTimer scheduledTimerWithTimeInterval:3
                                          target:self
                                        selector:@selector(loadComment)
                                        userInfo:nil
@@ -55,12 +57,16 @@ extern NSString *vCID;
 }
 
 - (void)LiveCmtClose{
+    
+    
+    [timer invalidate];
+    
     [self.view.window close];
 }
 
 - (void)loadComment{
     
-    
+    DLog(@"显示");
     
     NSURL* URL = [NSURL URLWithString:@"http://live.bilibili.com/ajax/msg"];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
@@ -131,6 +137,7 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
         return [object valueForKey:@"text"];
     }
 }
+
 
 
 

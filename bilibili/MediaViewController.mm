@@ -20,7 +20,7 @@ NSString *vAID;
 NSString *vPID;
 NSString *firstVideo;
 NSString *res;
-
+extern NSString *cmFile;
 
 
 mpv_handle *mpv;
@@ -102,23 +102,31 @@ static void wakeup(void *context) {
 
 - (void)parseURL{
     
+    queue = dispatch_queue_create("mpv", DISPATCH_QUEUE_SERIAL);
+    
     NSString *baseAPIUrl;
 
     if([vCID isEqualToString:@"LOCALVIDEO"]){
-//        if([vUrl length] > 5){
-//            NSDictionary *VideoInfoJson = [self getVideoInfo:vUrl];
-//            NSNumber *width = [VideoInfoJson objectForKey:@"width"];
-//            NSNumber *height = [VideoInfoJson objectForKey:@"height"];
-//            NSString *commentFile = @"/NotFound";
-//            if([cmFile length] > 5){
-//                commentFile = [self getComments:width :height];
-//            }
-//            [self PlayVideo:commentFile :res];
-//            return;
-//        }else{
-//            [self.view.window performClose:self];
-//        }
-//        return;
+        if([vUrl length] > 5){
+            NSDictionary *VideoInfoJson = [self getVideoInfo:vUrl];
+            NSNumber *width = [VideoInfoJson objectForKey:@"width"];
+            NSNumber *height = [VideoInfoJson objectForKey:@"height"];
+            NSString *commentFile = @"/NotFound";
+            if([cmFile length] > 5){
+                commentFile = [self getComments:width :height];
+            }
+            dispatch_async(queue, ^{
+                
+                [self PlayVideo:commentFile :res];
+                
+            });
+
+
+            return;
+        }else{
+            [self.view.window performClose:self];
+        }
+        return;
     }else if([vUrl containsString:@"live.bilibili"]){
         baseAPIUrl = @"http://live.bilibili.com/api/playurl?appkey=%@&otype=json&cid=%@&quality=%d&sign=%@";
         vAID = @"LIVE";
@@ -200,7 +208,7 @@ static void wakeup(void *context) {
 //
 //    // ffprobe
 
-    queue = dispatch_queue_create("mpv", DISPATCH_QUEUE_SERIAL);
+    
 
     
     
@@ -362,9 +370,9 @@ static void wakeup(void *context) {
     BOOL LC = [vCID isEqualToString:@"LOCALVIDEO"];
 
     NSString *stringURL = [NSString stringWithFormat:@"http://comment.bilibili.com/%@.xml",vCID];
-//    if(LC){
-//        stringURL = cmFile;
-//    }
+    if(LC){
+        stringURL = cmFile;
+    }
 
     DLog(@"Getting Comments from %@",stringURL);
     
@@ -382,7 +390,7 @@ static void wakeup(void *context) {
         
         [urlData writeToFile:filePath atomically:YES];
         
-        NSString *OutFile = [NSString stringWithFormat:@"%@/%@.cminfo.ass", @"/tmp",vCID];
+        NSString *OutFile = [NSString stringWithFormat:@"%@/%@.ass", @"/tmp",vCID];
         
         float mq = 6.75*[width doubleValue]/[height doubleValue]-4;
         if(mq < 3.0){

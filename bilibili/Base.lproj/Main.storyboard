@@ -5,6 +5,117 @@
         <plugIn identifier="com.apple.WebKitIBPlugin" version="7702"/>
     </dependencies>
     <scenes>
+        <!--Window Controller-->
+        <scene sceneID="SsC-qY-eNl">
+            <objects>
+                <windowController id="ABI-t1-cNz" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="3FF-Vd-gcb">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="163" y="199" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1280" height="777"/>
+                    </window>
+                    <connections>
+                        <segue destination="rdj-yF-t1T" kind="relationship" relationship="window.shadowedContentViewController" id="uaW-Ax-hPr"/>
+                    </connections>
+                </windowController>
+                <customObject id="q8j-CR-fgj" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-635" y="-59"/>
+        </scene>
+        <!--Play Local View Controller-->
+        <scene sceneID="Fgm-WI-dre">
+            <objects>
+                <viewController id="rdj-yF-t1T" customClass="PlayLocalViewController" sceneMemberID="viewController">
+                    <view key="view" id="JIg-sg-4Ko">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="O9F-wh-Ckq">
+                                <rect key="frame" x="78" y="154" width="154" height="17"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="11z-mY-1Z3"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="选择你需要播放的视频" id="A3c-eN-dsm">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eIh-op-vMl">
+                                <rect key="frame" x="78" y="100" width="154" height="17"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="0lA-DN-hM1"/>
+                                </constraints>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="选择字幕文件" id="fhH-gs-UZK">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ijy-vN-JK4">
+                                <rect key="frame" x="273" y="144" width="92" height="32"/>
+                                <buttonCell key="cell" type="push" title="选择文件" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jP3-LF-PgJ">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="selectVideo:" target="rdj-yF-t1T" id="guA-Bi-ugd"/>
+                                </connections>
+                            </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="48w-oL-Zvd">
+                                <rect key="frame" x="238" y="127" width="4" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="jPg-6A-xQv">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sWp-bq-pG1">
+                                <rect key="frame" x="194" y="43" width="92" height="32"/>
+                                <buttonCell key="cell" type="push" title="开始播放" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gTY-PF-QWn">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <segue destination="K5e-GW-JyM" kind="show" id="Mh8-p8-jY6"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wRL-P9-oIp">
+                                <rect key="frame" x="273" y="91" width="92" height="32"/>
+                                <buttonCell key="cell" type="push" title="选择文件" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="i1j-xx-rID">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="selectASS:" target="rdj-yF-t1T" id="Upe-ae-Cf6"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="trailing" secondItem="wRL-P9-oIp" secondAttribute="trailing" constant="-119" id="2Kn-wu-7xn"/>
+                            <constraint firstAttribute="centerX" secondItem="sWp-bq-pG1" secondAttribute="centerX" id="3gS-Qz-Tcc"/>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="centerY" secondItem="ijy-vN-JK4" secondAttribute="centerY" constant="26" id="40t-w8-7VJ"/>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="centerX" secondItem="JIg-sg-4Ko" secondAttribute="centerX" id="HSS-Uy-Mj6"/>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="centerY" secondItem="JIg-sg-4Ko" secondAttribute="centerY" id="RvV-Bp-BxS"/>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="centerY" secondItem="eIh-op-vMl" secondAttribute="centerY" constant="-27" id="TH8-IH-aNb"/>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="trailing" secondItem="ijy-vN-JK4" secondAttribute="trailing" constant="-119" id="fj3-pY-Cft"/>
+                            <constraint firstItem="sWp-bq-pG1" firstAttribute="top" secondItem="48w-oL-Zvd" secondAttribute="top" constant="73" id="gQh-Am-zKy"/>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="trailing" secondItem="O9F-wh-Ckq" secondAttribute="trailing" constant="10" id="prj-wh-gco"/>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="centerY" secondItem="O9F-wh-Ckq" secondAttribute="centerY" constant="27" id="rzP-DS-LhP"/>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="trailing" secondItem="eIh-op-vMl" secondAttribute="trailing" constant="10" id="vnO-Qb-17J"/>
+                            <constraint firstItem="48w-oL-Zvd" firstAttribute="centerY" secondItem="wRL-P9-oIp" secondAttribute="centerY" constant="-27" id="yux-bk-i2o"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="ass" destination="eIh-op-vMl" id="cx9-4K-los"/>
+                        <outlet property="video" destination="O9F-wh-Ckq" id="lxr-VE-OU4"/>
+                    </connections>
+                </viewController>
+                <customObject id="idx-aW-YrL" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1260" y="-59"/>
+        </scene>
         <!--Application-->
         <scene sceneID="JPo-4y-FX3">
             <objects>
@@ -69,6 +180,9 @@
                                     <items>
                                         <menuItem title="播放本地视频" id="vSa-5c-1jE">
                                             <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <segue destination="ABI-t1-cNz" kind="show" id="yDO-Ew-tOZ"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem title="下载管理" id="xpU-4d-0X0">
                                             <modifierMask key="keyEquivalentModifierMask"/>
@@ -296,7 +410,7 @@
                 </windowController>
                 <customObject id="qMd-Ho-2OI" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-722" y="245"/>
+            <point key="canvasLocation" x="-565" y="404"/>
         </scene>
         <!--About View-->
         <scene sceneID="4zC-FS-wE9">
@@ -323,7 +437,7 @@
                 </viewController>
                 <customObject id="daZ-GX-USV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-722" y="750"/>
+            <point key="canvasLocation" x="-565" y="855"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -416,7 +530,7 @@
                                     </subviews>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
-                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="nmI-TD-0uf">
+                                <scroller key="horizontalScroller" verticalHuggingPriority="750" doubleValue="0.3392857142857143" horizontal="YES" id="nmI-TD-0uf">
                                     <rect key="frame" x="1" y="119" width="223" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -550,7 +664,7 @@
                                     </subviews>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </clipView>
-                                <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="5Gj-7M-Fgf">
+                                <scroller key="horizontalScroller" verticalHuggingPriority="750" doubleValue="0.15966386554621848" horizontal="YES" id="5Gj-7M-Fgf">
                                     <rect key="frame" x="1" y="119" width="223" height="15"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
@@ -693,4 +807,7 @@
             <point key="canvasLocation" x="88" y="855"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="xTu-VC-gZz"/>
+    </inferredMetricsTieBreakers>
 </document>
