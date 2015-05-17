@@ -17,6 +17,7 @@
 
 + (NSString *) md5:(NSString *) input;
 
++ (NSData *)videoJSONData:(NSString *)baseAPIUrl cid:(NSString *)cid quality:(int)quality;
 //CG_EXTERN CGColorRef CGColorCreateGenericRGB(CGFloat red, CGFloat green,
 
 @end

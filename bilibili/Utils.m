@@ -82,5 +82,35 @@
     
 }
 
++ (NSData *)videoJSONData:(NSString *)baseAPIUrl cid:(NSString *)cid quality:(int)quality{
+    
+    
+    NSString *param = [NSString stringWithFormat:@"appkey=%@&otype=json&cid=%@&quality=%d%@",[Utils getDevInfo:@"appkey"],cid,quality,[Utils getDevInfo:@"appsec"]];
+    
+    NSString *sign = [Utils md5:[param stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
+    // Get Playback URL
+    
+    NSURL* URL = [NSURL URLWithString:[NSString stringWithFormat:baseAPIUrl,[Utils getDevInfo:@"appkey"],cid,quality,sign]];
+    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
+    request.HTTPMethod = @"GET";
+    request.timeoutInterval = 5;
+    
+    NSUserDefaults *settingsController = [NSUserDefaults standardUserDefaults];
+    NSString *xff = [settingsController objectForKey:@"xff"];
+    if([xff length] > 4){
+        [request setValue:xff forHTTPHeaderField:@"X-Forwarded-For"];
+        [request setValue:xff forHTTPHeaderField:@"Client-IP"];
+    }
+    
+    [request addValue:@"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0.2) Gecko/20100101 Firefox/6.0.2 Fengfan/1.0" forHTTPHeaderField:@"User-Agent"];
+    
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    return [NSURLConnection sendSynchronousRequest:request
+                                                          returningResponse:&response
+                                                                      error:&error];
+}
+
 
 @end

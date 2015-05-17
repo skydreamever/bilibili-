@@ -151,33 +151,10 @@ static void wakeup(void *context) {
     // Get Sign
     int quality = [self getSettings:@"quality"];
     
-    
-    
-    NSString *param = [NSString stringWithFormat:@"appkey=%@&otype=json&cid=%@&quality=%d%@",[Utils getDevInfo:@"appkey"],vCID,quality,[Utils getDevInfo:@"appsec"]];
-    
-    NSString *sign = [Utils md5:[param stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    
-    // Get Playback URL
-    
-    NSURL* URL = [NSURL URLWithString:[NSString stringWithFormat:baseAPIUrl,[Utils getDevInfo:@"appkey"],vCID,quality,sign]];
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:URL];
-    request.HTTPMethod = @"GET";
-    request.timeoutInterval = 5;
-    
-    NSUserDefaults *settingsController = [NSUserDefaults standardUserDefaults];
-    NSString *xff = [settingsController objectForKey:@"xff"];
-    if([xff length] > 4){
-        [request setValue:xff forHTTPHeaderField:@"X-Forwarded-For"];
-        [request setValue:xff forHTTPHeaderField:@"Client-IP"];
-    }
-    
-    [request addValue:@"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0.2) Gecko/20100101 Firefox/6.0.2 Fengfan/1.0" forHTTPHeaderField:@"User-Agent"];
-    
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * videoAddressJSONData = [NSURLConnection sendSynchronousRequest:request
-                                                          returningResponse:&response
-                                                                      error:&error];
+    NSData * videoAddressJSONData = [Utils videoJSONData:baseAPIUrl cid:vCID
+                                                 quality:quality];
+                                                                          
+                                     
     NSError *jsonError;
     NSMutableDictionary *videoResult = [NSJSONSerialization JSONObjectWithData:videoAddressJSONData options:NSJSONWritingPrettyPrinted error:&jsonError];
     
@@ -288,11 +265,6 @@ static void wakeup(void *context) {
                 NSString *commentFile = [self getComments:width :height];
                 [self PlayVideo:commentFile :res];
 
-
-
-
-            
-            //        [self PlayVideo:commentFile :res];
         }else{
             [_statusShow setStringValue:[NSString stringWithFormat:@"%@失败",_statusShow.stringValue]];
             return;
@@ -728,8 +700,14 @@ startCustomAnimationToEnterFullScreenWithDuration:(NSTimeInterval)duration{
     
     isCancelled = YES;
    
+    if(obServer){
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResizeNotification object:self];
+        obServer = NO;
+    }
+    
     if (mpv) {
-//        mpv_set_wakeup_callback(mpv, NULL,NULL);
+        
+        mpv_set_wakeup_callback(mpv, NULL,NULL);
         
         [self mpv_stop];
         [self mpv_quit];
