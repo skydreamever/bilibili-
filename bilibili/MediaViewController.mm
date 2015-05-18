@@ -400,12 +400,29 @@ static void wakeup(void *context) {
             mq = 8.0;
         }
         
-        danmaku2ass([filePath cStringUsingEncoding:NSUTF8StringEncoding],
-                    [OutFile cStringUsingEncoding:NSUTF8StringEncoding],
-                    [width intValue],[height intValue],
-                    "STHeiti",(int)[height intValue]/25.1,
-                    [[NSString stringWithFormat:@"%.2f",[self getSettings:@"transparency"]] floatValue],
-                    mq,5);
+        float fontsize = [self getSettings:@"fontsize"];
+        if(!fontsize){
+            fontsize = 25.1;
+        }else{
+            fontsize = fontsize + 0.1;
+        }
+        
+        bool disableBottom;
+        float disableSettings = [self getSettings:@"disableBottomComment"];
+        if(disableSettings > 0 ){
+            disableBottom = true;
+        }else{
+            disableBottom = false;
+        }
+        
+        
+        
+        ConvertBilibiliCommentWithBlockSettings([filePath cStringUsingEncoding:NSUTF8StringEncoding],
+                                                [OutFile cStringUsingEncoding:NSUTF8StringEncoding],
+                                                [width intValue],[height intValue],
+                                                "STHeiti",(int)[height intValue]/fontsize,
+                                                [[NSString stringWithFormat:@"%.2f",[self getSettings:@"transparency"]] floatValue],
+                                                mq,5,disableBottom);
         
         DLog(@"Comment converted to %@",OutFile);
         [_statusShow setStringValue:[NSString stringWithFormat:@"%@\n同步率为110%%",_statusShow.stringValue]];
